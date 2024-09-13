@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Molonari"
+version = "1.0"
+readme = "README.md"
+license =  {file = "LICENSE"}
+authors = [
+  {name = "Nicolas Flipo"},
+]
+
+[tool.setuptools]
+packages = []
+
+[tool.rye.workspace]
+members = ["Molonaviz", "pyheatmy"]
