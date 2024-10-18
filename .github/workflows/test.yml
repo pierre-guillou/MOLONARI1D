@@ -22,23 +22,26 @@ jobs:
     - name: Checkout the repository
       uses: actions/checkout@v4
 
-    - uses: actions/setup-python@v5
+    - name: Install the latest version of rye
+      uses: eifinger/setup-rye@v4
       with:
-        python-version: ${{ matrix.pyver }}
+        enable-cache: true
+
+    - name: Sync dependencies
+      run: |
+        rye pin ${{ matrix.pyver }}
+        rye sync
 
     - name: Install dev dependencies
-      run: pip install pytest nbmake
-
-    - name: Install ${{ matrix.module }}
-      run: pip install ${{ matrix.module }}/
+      run: rye add pytest nbmake
 
     - name: Test ${{ matrix.module }}
-      run: pytest ${{ matrix.module }}
+      run: rye run pytest ${{ matrix.module }}
 
     - name: Test Jupyter Notebooks
       if: matrix.module == 'pyheatmy'
       run: |
-        pytest --nbmake --nbmake-timeout=600 \
+        rye run pytest --nbmake --nbmake-timeout=600 \
           pyheatmy/pyheatmy/DREAM_v1.ipynb \
           pyheatmy/research/synthetic_cases_generator/demo_genData.ipynb
       shell: bash
